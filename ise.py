@@ -592,16 +592,15 @@ class ERS(object):
     def add_device(self,
                    name,
                    ip_address,
-                   radius_key,
-                   snmp_ro,
-                   dev_group,
-                   dev_location,
-                   dev_type,
-                   description='',
+                   radius_key=None,
+                   snmp_ro=None,
+                   dev_groups=None,
+                   description=None,
                    snmp_v='TWO_C',
-                   dev_profile='Cisco',
+                   dev_profile=None,
                    tacacs_shared_secret=None,
-                   tacas_connect_mode_options='ON_LEGACY'
+                   tacas_connect_mode_options='ON_LEGACY',
+                   coa_port=None
                    ):
         """
         Add a device.
@@ -626,34 +625,36 @@ class ERS(object):
         self.ise.headers.update(
             {'ACCEPT': 'application/json', 'Content-Type': 'application/json'})
 
-        data = {'NetworkDevice': {'name': name,
-                                  'description': description,
-                                  'authenticationSettings': {
-                                      'networkProtocol': 'RADIUS',
-                                      'radiusSharedSecret': radius_key,
-                                      'enableKeyWrap': 'false',
-                                  },
-                                  'snmpsettings': {
-                                      'version': 'TWO_C',
-                                      'roCommunity': snmp_ro,
-                                      'pollingInterval': 3600,
-                                      'linkTrapQuery': 'true',
-                                      'macTrapQuery': 'true',
-                                      'originatingPolicyServicesNode': 'Auto'
-                                  },
-                                  'profileName': dev_profile,
-                                  'coaPort': 1700,
-                                  'NetworkDeviceIPList': [{
-                                      'ipaddress': ip_address,
-                                      'mask': 32
-                                  }],
-                                  'NetworkDeviceGroupList': [
-                                      dev_group, dev_type, dev_location,
-                                      'IPSEC#Is IPSEC Device#No'
-                                    ]
-                                  }
-                }
+        data = {
+            'NetworkDevice': {
+                'name': name,
+                'NetworkDeviceIPList': [{'ipaddress': ip_address, 'mask': 32}]
+            }
+        }
 
+        if description is not None:
+            data['NetworkDevice']['description'] = description
+        if radius_key is not None:
+            data['NetworkDevice']['authenticationSettings'] = {
+                'networkProtocol': 'RADIUS',
+                'radiusSharedSecret': radius_key,
+                'enableKeyWrap': 'false',
+            }
+        if snmp_ro is not None:
+            data['NetworkDevice']['snmpsettings'] = {
+                'version': snmp_v,
+                'roCommunity': snmp_ro,
+                'pollingInterval': 3600,
+                'linkTrapQuery': 'true',
+                'macTrapQuery': 'true',
+                'originatingPolicyServicesNode': 'Auto'
+            }
+        if dev_profile is not None:
+            data['NetworkDevice']['profileName'] = dev_profile
+        if coa_port is not None:
+            data['NetworkDevice']['coaPort'] = coa_port
+        if dev_groups is not None:
+            data['NetworkDevice']['NetworkDeviceGroupList'] = dev_groups
         if tacacs_shared_secret is not None:
             data['NetworkDevice']['tacacsSettings'] = {
               'sharedSecret': tacacs_shared_secret,
