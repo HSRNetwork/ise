@@ -580,8 +580,7 @@ class ERS(object):
         found_device = resp.json()
 
         if found_device['SearchResult']['total'] == 1:
-            result = self.get_object('{0}/config/networkdevice/'.format(self.url_base),
-                                     found_device['SearchResult']['resources'][0]['id'], 'NetworkDevice')  # noqa E501
+            result = self.get_object('{0}/config/networkdevice/'.format(self.url_base), found_device['SearchResult']['resources'][0]['id'], 'NetworkDevice')  # noqa E501
             return result
         elif found_device['SearchResult']['total'] == 0:
             result['response'] = '{0} not found'.format(device)
