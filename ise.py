@@ -580,7 +580,8 @@ class ERS(object):
         found_device = resp.json()
 
         if found_device['SearchResult']['total'] == 1:
-            result = self.get_object('{0}/config/networkdevice/'.format(self.url_base), found_device['SearchResult']['resources'][0]['id'], 'NetworkDevice')  # noqa E501
+            result = self.get_object('{0}/config/networkdevice/'.format(self.url_base),
+                                     found_device['SearchResult']['resources'][0]['id'], 'NetworkDevice')  # noqa E501
             return result
         elif found_device['SearchResult']['total'] == 0:
             result['response'] = '{0} not found'.format(device)
@@ -711,3 +712,28 @@ class ERS(object):
             return result
         else:
             return ERS._pass_ersresponse(result, resp)
+
+    def get_nodes(self):
+        """
+        Get all nodes.
+        :return: result dictionary
+        """
+        return self._get_objects('{0}/config/node'.format(self.url_base))
+
+    def get_node_details(self, node_id):
+        """
+         Get the details of a node.
+         :param node_id the id of the node to fetch
+         :return: the details of the node
+         """
+        return self.get_object('{0}/config/node/'.format(
+            self.url_base), node_id, 'Node')
+
+    def get_node_details_by_name(self, name):
+        """
+         Get the details of a node by its name.
+         :param name the name of the node to fetch
+         :return: the details of the node
+         """
+        return self.get_object('{0}/config/node/name/'.format(
+            self.url_base), name, 'Node')

@@ -6,7 +6,7 @@ sys.path.append('./')
 
 from ise import ERS  # noqa E402
 from pprint import pprint  # noqa E402
-from config import uri, endpoint, endpoint_group, user, identity_group, device  # noqa E402
+from config import uri, endpoint, endpoint_group, user, identity_group, device, node  # noqa E402
 
 ise = ERS(ise_node=uri['ise_node'], ers_user=uri['ers_user'], ers_pass=uri['ers_pass'], verify=False, disable_warnings=True)  # noqa: E501
 
@@ -188,7 +188,41 @@ def delete_device(device):
         print('delete_device » OK')
 
 
+def get_nodes():
+    test_get = ise.get_nodes()
+    print(test_get)
+
+
+def get_node_details(node_id):
+    test_get = ise.get_node_details(node_id)
+    print(test_get)
+
+
+def get_node_details_by_name(node_name):
+    test_get = ise.get_node_details_by_name(node_name)
+    print(test_get)
+
+
+def test_nodes():
+    nodes = ise.get_nodes()
+    pprint(nodes)
+    assert nodes['success']
+
+    node_by_id = ise.get_node_details(node['id'])
+    pprint(node_by_id)
+    assert node_by_id['success']
+
+    node_by_name = ise.get_node_details_by_name(node['name'])
+    pprint(node_by_name)
+    assert node_by_name['success']
+    for key in node_by_name['response']:
+        if key == 'link':
+            continue
+        assert node_by_name['response'][key] == node_by_id['response'][key]
+
+
 if __name__ == "__main__":
+
 
     # Endpoint tests
     add_endpoint(endpoint)
@@ -216,3 +250,8 @@ if __name__ == "__main__":
     get_device(device)
     delete_device(device)
     #  get_object()  # TODO
+
+    # Node tests
+    get_nodes()
+    get_node_details(node['id'])
+    get_node_details_by_name(node['name'])
