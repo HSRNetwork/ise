@@ -2,19 +2,18 @@
 # But untill then this will work as a crude non-automagic testbed. // Falk
 
 import sys
-
 sys.path.append('./')
 
 from ise import ERS  # noqa E402
 from pprint import pprint  # noqa E402
 from config import uri, endpoint, endpoint_group, user, identity_group, device, node  # noqa E402
 
-ise = ERS(ise_node=uri['ise_node'], ers_user=uri['ers_user'], ers_pass=uri['ers_pass'], verify=False,
-          disable_warnings=True)  # noqa: E501
+ise = ERS(ise_node=uri['ise_node'], ers_user=uri['ers_user'], ers_pass=uri['ers_pass'], verify=False, disable_warnings=True)  # noqa: E501
 
 
 def test_groups():
-    groups = ise.get_endpoint_groups(100)['response']
+
+    groups = ise.get_endpoint_groups()['response']
     pprint(groups)
 
     group = ise.get_endpoint_group('Juniper-Device')['response']
@@ -97,7 +96,7 @@ def add_user(user, identity_group_id):
         enable=user['enable'],
         first_name=user['first_name'],
         last_name=user['last_name']
-    )
+        )
     if test['error']:
         print(test['response'])
     else:

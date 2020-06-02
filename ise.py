@@ -178,8 +178,7 @@ class ERS(object):
         found_group = resp.json()
 
         if found_group['SearchResult']['total'] == 1:
-            result = self.get_object('{0}/config/endpointgroup'.format(self.url_base),
-                                     found_group['SearchResult']['resources'][0]['id'], "EndPointGroup")  # noqa E501
+            result = self.get_object('{0}/config/endpointgroup'.format(self.url_base), found_group['SearchResult']['resources'][0]['id'], "EndPointGroup")  # noqa E501
 
             return result
         else:
@@ -255,9 +254,7 @@ class ERS(object):
             found_endpoint = resp.json()
 
             if found_endpoint['SearchResult']['total'] == 1:
-                result = self.get_object('{0}/config/endpoint/'.format(self.url_base),
-                                         found_endpoint['SearchResult']['resources'][0]['id'],
-                                         'ERSEndPoint')  # noqa E501
+                result = self.get_object('{0}/config/endpoint/'.format(self.url_base), found_endpoint['SearchResult']['resources'][0]['id'], 'ERSEndPoint')  # noqa E501
                 return result
             elif found_endpoint['SearchResult']['total'] == 0:
                 result['response'] = '{0} not found'.format(mac_address)
@@ -552,8 +549,7 @@ class ERS(object):
         self.ise.headers.update(
             {'ACCEPT': 'application/json', 'Content-Type': 'application/json'})
 
-        return self.get_object('{0}/config/networkdevicegroup/'.format(self.url_base), device_group_oid,
-                               'NetworkDeviceGroup')  # noqa E501
+        return self.get_object('{0}/config/networkdevicegroup/'.format(self.url_base), device_group_oid, 'NetworkDeviceGroup')  # noqa E501
 
     def get_devices(self, filter=None):
         """
@@ -662,8 +658,8 @@ class ERS(object):
             data['NetworkDevice']['NetworkDeviceGroupList'] = dev_groups
         if tacacs_shared_secret is not None:
             data['NetworkDevice']['tacacsSettings'] = {
-                'sharedSecret': tacacs_shared_secret,
-                'connectModeOptions': tacas_connect_mode_options
+              'sharedSecret': tacacs_shared_secret,
+              'connectModeOptions': tacas_connect_mode_options
             }
 
         resp = self.ise.post('{0}/config/networkdevice'.format(self.url_base),
