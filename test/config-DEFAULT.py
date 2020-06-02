@@ -43,3 +43,8 @@ device = {
     'snmp_v': 'TWO_C',
     'dev_profile': 'Cisco'
 }
+
+node = {
+    'name': 'node-name',
+    'id': '99999999-9999-9999-9999-999999999999',
+}

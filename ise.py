@@ -178,7 +178,8 @@ class ERS(object):
         found_group = resp.json()
 
         if found_group['SearchResult']['total'] == 1:
-            result = self.get_object('{0}/config/endpointgroup'.format(self.url_base), found_group['SearchResult']['resources'][0]['id'], "EndPointGroup")  # noqa E501
+            result = self.get_object('{0}/config/endpointgroup'.format(self.url_base),
+                                     found_group['SearchResult']['resources'][0]['id'], "EndPointGroup")  # noqa E501
 
             return result
         else:
@@ -254,7 +255,9 @@ class ERS(object):
             found_endpoint = resp.json()
 
             if found_endpoint['SearchResult']['total'] == 1:
-                result = self.get_object('{0}/config/endpoint/'.format(self.url_base), found_endpoint['SearchResult']['resources'][0]['id'], 'ERSEndPoint')  # noqa E501
+                result = self.get_object('{0}/config/endpoint/'.format(self.url_base),
+                                         found_endpoint['SearchResult']['resources'][0]['id'],
+                                         'ERSEndPoint')  # noqa E501
                 return result
             elif found_endpoint['SearchResult']['total'] == 0:
                 result['response'] = '{0} not found'.format(mac_address)
@@ -549,7 +552,8 @@ class ERS(object):
         self.ise.headers.update(
             {'ACCEPT': 'application/json', 'Content-Type': 'application/json'})
 
-        return self.get_object('{0}/config/networkdevicegroup/'.format(self.url_base), device_group_oid, 'NetworkDeviceGroup')  # noqa E501
+        return self.get_object('{0}/config/networkdevicegroup/'.format(self.url_base), device_group_oid,
+                               'NetworkDeviceGroup')  # noqa E501
 
     def get_devices(self, filter=None):
         """
@@ -580,7 +584,8 @@ class ERS(object):
         found_device = resp.json()
 
         if found_device['SearchResult']['total'] == 1:
-            result = self.get_object('{0}/config/networkdevice/'.format(self.url_base), found_device['SearchResult']['resources'][0]['id'], 'NetworkDevice')  # noqa E501
+            result = self.get_object('{0}/config/networkdevice/'.format(self.url_base),
+                                     found_device['SearchResult']['resources'][0]['id'], 'NetworkDevice')  # noqa E501
             return result
         elif found_device['SearchResult']['total'] == 0:
             result['response'] = '{0} not found'.format(device)
@@ -657,8 +662,8 @@ class ERS(object):
             data['NetworkDevice']['NetworkDeviceGroupList'] = dev_groups
         if tacacs_shared_secret is not None:
             data['NetworkDevice']['tacacsSettings'] = {
-              'sharedSecret': tacacs_shared_secret,
-              'connectModeOptions': tacas_connect_mode_options
+                'sharedSecret': tacacs_shared_secret,
+                'connectModeOptions': tacas_connect_mode_options
             }
 
         resp = self.ise.post('{0}/config/networkdevice'.format(self.url_base),
@@ -711,3 +716,28 @@ class ERS(object):
             return result
         else:
             return ERS._pass_ersresponse(result, resp)
+
+    def get_nodes(self):
+        """
+        Get all nodes.
+        :return: result dictionary
+        """
+        return self._get_objects('{0}/config/node'.format(self.url_base))
+
+    def get_node_details(self, node_id):
+        """
+         Get the details of a node.
+         :param node_id the id of the node to fetch
+         :return: the details of the node
+         """
+        return self.get_object('{0}/config/node/'.format(
+            self.url_base), node_id, 'Node')
+
+    def get_node_details_by_name(self, name):
+        """
+         Get the details of a node by its name.
+         :param name the name of the node to fetch
+         :return: the details of the node
+         """
+        return self.get_object('{0}/config/node/name/'.format(
+            self.url_base), name, 'Node')
